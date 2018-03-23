@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Favourite Books</title>
+
+    <link href="css/style.css" type="text/css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script src="lib/typed.min.js" type="text/javascript"></script>
+    <script src="assets/demos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.5/lodash.min.js"></script>
+
+
+    <!-- JavaScript -->
+    <script src="js/app.js" type="text/javascript"></script>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.4/css/solid.css" integrity="sha384-g2aKxiZcFezoVOq4MsjaxuBbSxSlXD/NRQ5GaPLfvCtcTLgP3fYZKKAGxCM/wMfe" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.4/css/fontawesome.css" integrity="sha384-xdTUmhbcetyLRVL4PAriRajOve+/5pjOiy5sJABnhXMcRMVc9HI9s2KmOCjjDK/P" crossorigin="anonymous">
+</head>
+
+<body ng-app="myApp" ng-controller="myBookCtrl" class="image-bg">
+<header>
+ <div><img src="logo.png" class="logo"></div>
+</header>
+
+<div class="container">
+    <!--Search Template-->
+    <div class="row">
+        <div class="container search-bar">
+            <form>
+                <input type="text" id="searchItem" class="search-box offset-md-2 offset-xs-1 col-7 " placeholder="Search.." ng-model="search"/>
+                <button type="submit" ng-click="getBooks(search)" class="search-button btn btn-danger col-1"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!--Typed Text-->
+    <div class="type-wrap" ng-show="!favShow">
+        <div id="typed-strings">
+            <span>Welcome to <span style="color: orange">LogicX</span> BookWorld.</strong></span>
+            <p>Search for your favourite Book's,</p>
+            <p href="#aboutme">and get them delivered.</p>
+        </div>
+        <span id="typed" style="white-space:pre;"></span>
+    </div>
+
+    <!--No Result found Template-->
+    <div class="alert alert-danger alert-dismissible fade show offset-md-3 col-6" role="alert" ng-hide="noResultFound">
+        <strong>Sorry!</strong> No book Found.
+    </div>
+
+    <!--Search Result's Template-->
+    <div class="row">
+        <div ng-repeat ="book in searchResult" class="card" style="width: 18rem;">
+            <img class="card-img-top" ng-src="{{book.CoverThumb}}" alt="image not found" ngf-resize="{width: 200, height: 200, quality: .5}">
+            <div class="card-body">
+                <h5 class="card-title text-center">Title : {{book.Title}}</h5>
+                <p class="card-text text-center" id="bId">ID : {{book.ISBN}}</p>
+                <p class="card-text text-center">Author : {{book.Authors[0].Name}}</p>
+                <p class="card-text text-center">Subjects : {{book.Subjects[0]}}</p>
+                <p class="card-text text-center">Language : {{book.LanguageCode}}</p>
+                <a class="btn btn-info" ng-click="addToFav($index)">Add to Favourite</a>
+            </div>
+        </div>
+    </div>
+
+    <!--Favourite Template-->
+    <div class="jumbotron" ng-show="favShow">
+        <h1>My Favourite Books</h1>
+        <div>
+            <button class="btn btn-outline-dark" ng-click="listView()"><i class="fa fa-bars"></i> List</button>
+            <button class="btn btn-outline-dark" ng-click="gridView()"><i class="fa fa-th-large"></i> Grid</button>
+        </div>
+
+        <!--Search Result's Template-->
+        <div class="row">
+            <div ng-repeat ="favBook in favList" class="card view" style="width: 21rem;">
+                <img class="card-img-top img-adjust" ng-src="{{favBook.CoverThumb}}" alt="image not found">
+                <div class="card delete-cart">
+                    <h5 class="card-title text-center">Title : {{favBook.Title}}</h5>
+                    <p class="card-text text-center">ID : {{favBook.ISBN}}</p>
+                    <p class="card-text text-center">Author : {{favBook.Authors[0].Name}}</p>
+                    <p class="card-text text-center">Subjects : {{favBook.Subjects[0]}}</p>
+                    <p class="card-text text-center">Language : {{LanguageCode}}</p>
+                    <a class="btn btn-danger float-center" ng-click="removeFav(favList, $index)">Remove From Favourite</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
